@@ -3,6 +3,7 @@ library(extrafont)
 #font_import()
 loadfonts()
 #fonts()
+library(here)
 library(tidyverse)
 library(scales)
 library(grid)
@@ -20,13 +21,15 @@ library(demography)
 library(RColorBrewer)
 options( scipen = 10 ) # print full numbers, not scientific notation
 
-setwd("/Users/filiperibeiro/Documents/University of Évora 2013to/Articles/New ideas for use/WorkingNow/02 February 2021/LE Week Portugal_NUTSII")
-source("LT_function_weekLE.R")
+# setwd("/Users/filiperibeiro/Documents/University of Évora 2013to/Articles/New ideas for use/WorkingNow/02 February 2021/LE Week Portugal_NUTSII")
+source(here::here("R","LT_function_weekLE.R"))
 
 ### Good but not detailed below age 1
 #### Weekly deaths from Eurostat 
 #### adding a repeated column to split 0-5 into 0 & 1-4...
-wdeath.EUStat <- read_csv("demo_r_mwk2_05/demo_r_mwk2_05_1_Data.csv", locale = locale(encoding = "ISO-8859-1", grouping_mark = ",")) %>% 
+wdeath.EUStat <- read_csv(here::here("Data","demo_r_mwk2_05_1_Data.csv"), 
+                          locale = locale(encoding = "ISO-8859-1", 
+                                          grouping_mark = ",")) %>% 
   select(-UNIT, -`Flag and Footnotes`) %>% 
   mutate(GEO = fct_recode(GEO, Centro = "Centro (PT)",
                           AML ="Área Metropolitana de Lisboa",
@@ -60,7 +63,9 @@ wdeath.EUStat %>% filter(GEO=="Portugal" & SEX=="Female" & Year>=2018) %>%
 ### Deaths by age and year from INE and Eurostat: merging both
 ## 90 + as open-end age group
 ## Split deaths from 0-5 into 0 & 1-4: Stage 1, proportions
-death.EUStat <- read_csv("demo_r_magec/demo_r_magec_1_Data.csv", locale = locale(encoding = "ISO-8859-1", grouping_mark = ",")) %>% 
+death.EUStat <- read_csv(here::here("Data","demo_r_magec_1_Data.csv"), 
+                         locale = locale(encoding = "ISO-8859-1", 
+                                         grouping_mark = ",")) %>% 
   select(-UNIT, -`Flag and Footnotes`) %>%
   mutate(GEO = fct_recode(GEO, Centro = "Centro (PT)",
                           AML ="Área Metropolitana de Lisboa",
@@ -76,7 +81,7 @@ death.EUStat <- read_csv("demo_r_magec/demo_r_magec_1_Data.csv", locale = locale
 ## Deaths from INE
 ## Need to be merged with previous to get 2019 deaths
 # Still need to update
-death.ine2019 <- read_csv2("Deaths INE 2019.csv", locale = locale(encoding = "ISO-8859-1")) %>%
+death.ine2019 <- read_csv2(here::here("Data","Deaths INE 2019.csv"), locale = locale(encoding = "ISO-8859-1")) %>%
   mutate(GEO = fct_recode(GEO, 
                           Portugal = "PT: Portugal",
                           Norte = "11: Norte",
@@ -126,7 +131,7 @@ wdeath.EUStat %>% filter(Year==2020 & GEO=="Alentejo") %>%
 ### Population by age and year from INE and Eurostat
 ### to calculate Exposures
 # Still need to update further..
-exp.ine <- read_csv2("Pop Est INE 13012021.csv", locale = locale(encoding = "ISO-8859-1")) %>%
+exp.ine <- read_csv2(here::here("Data","Pop Est INE 13012021.csv"), locale = locale(encoding = "ISO-8859-1")) %>%
   mutate(GEO = fct_recode(GEO, 
                           Portugal = "PT: Portugal",
                           Norte = "11: Norte",
@@ -144,7 +149,7 @@ exp.ine %>% head()
 exp.ine %>% tail()
 
 
-exp.EUStat <- read_csv("demo_r_d2jan/demo_r_d2jan_1_Data.csv", locale = locale(encoding = "ISO-8859-1", grouping_mark = ",")) %>%
+exp.EUStat <- read_csv(here::here("Data","demo_r_d2jan_1_Data.csv"), locale = locale(encoding = "ISO-8859-1", grouping_mark = ",")) %>%
   select(-UNIT, -`Flag and Footnotes`) %>% 
   filter(TIME>=2000) %>%
   mutate(GEO = fct_recode(GEO, Centro = "Centro (PT)",
